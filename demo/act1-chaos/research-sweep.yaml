@@ -1,0 +1,27 @@
+# Research kicks off a 6-GPU hyperparameter sweep. No queue, no quota.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: research-sweep
+  namespace: research
+  labels:
+    app: ai-demo
+spec:
+  parallelism: 6
+  completions: 6
+  completionMode: Indexed
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 1
+      containers:
+      - name: worker
+        image: busybox:1.37
+        command: ["sh", "-c", "echo \"sweep trial (worker $JOB_COMPLETION_INDEX)\"; sleep 3600"]
+        resources:
+          requests:
+            cpu: 250m
+            memory: 256Mi
+          limits:
+            nvidia.com/gpu: 1   # 1 GPU per worker

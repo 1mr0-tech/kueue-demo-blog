@@ -1,0 +1,168 @@
+# Friday evening: research queues up 6 experiments x 2 GPUs = 12 GPUs on an 8-GPU cluster.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: research-backlog-1
+  namespace: research
+  labels:
+    app: ai-demo
+    kueue.x-k8s.io/queue-name: team-queue
+spec:
+  parallelism: 2
+  completions: 2
+  completionMode: Indexed
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 1
+      containers:
+      - name: worker
+        image: busybox:1.37
+        command: ["sh", "-c", "echo \"backlog 1 (worker $JOB_COMPLETION_INDEX)\"; sleep 3600"]
+        resources:
+          requests:
+            cpu: 250m
+            memory: 256Mi
+          limits:
+            nvidia.com/gpu: 1
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: research-backlog-2
+  namespace: research
+  labels:
+    app: ai-demo
+    kueue.x-k8s.io/queue-name: team-queue
+spec:
+  parallelism: 2
+  completions: 2
+  completionMode: Indexed
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 1
+      containers:
+      - name: worker
+        image: busybox:1.37
+        command: ["sh", "-c", "echo \"backlog 2 (worker $JOB_COMPLETION_INDEX)\"; sleep 3600"]
+        resources:
+          requests:
+            cpu: 250m
+            memory: 256Mi
+          limits:
+            nvidia.com/gpu: 1
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: research-backlog-3
+  namespace: research
+  labels:
+    app: ai-demo
+    kueue.x-k8s.io/queue-name: team-queue
+spec:
+  parallelism: 2
+  completions: 2
+  completionMode: Indexed
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 1
+      containers:
+      - name: worker
+        image: busybox:1.37
+        command: ["sh", "-c", "echo \"backlog 3 (worker $JOB_COMPLETION_INDEX)\"; sleep 3600"]
+        resources:
+          requests:
+            cpu: 250m
+            memory: 256Mi
+          limits:
+            nvidia.com/gpu: 1
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: research-backlog-4
+  namespace: research
+  labels:
+    app: ai-demo
+    kueue.x-k8s.io/queue-name: team-queue
+spec:
+  parallelism: 2
+  completions: 2
+  completionMode: Indexed
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 1
+      containers:
+      - name: worker
+        image: busybox:1.37
+        command: ["sh", "-c", "echo \"backlog 4 (worker $JOB_COMPLETION_INDEX)\"; sleep 3600"]
+        resources:
+          requests:
+            cpu: 250m
+            memory: 256Mi
+          limits:
+            nvidia.com/gpu: 1
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: research-backlog-5
+  namespace: research
+  labels:
+    app: ai-demo
+    kueue.x-k8s.io/queue-name: team-queue
+spec:
+  parallelism: 2
+  completions: 2
+  completionMode: Indexed
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 1
+      containers:
+      - name: worker
+        image: busybox:1.37
+        command: ["sh", "-c", "echo \"backlog 5 (worker $JOB_COMPLETION_INDEX)\"; sleep 3600"]
+        resources:
+          requests:
+            cpu: 250m
+            memory: 256Mi
+          limits:
+            nvidia.com/gpu: 1
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: research-backlog-6
+  namespace: research
+  labels:
+    app: ai-demo
+    kueue.x-k8s.io/queue-name: team-queue
+spec:
+  parallelism: 2
+  completions: 2
+  completionMode: Indexed
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 1
+      containers:
+      - name: worker
+        image: busybox:1.37
+        command: ["sh", "-c", "echo \"backlog 6 (worker $JOB_COMPLETION_INDEX)\"; sleep 3600"]
+        resources:
+          requests:
+            cpu: 250m
+            memory: 256Mi
+          limits:
+            nvidia.com/gpu: 1

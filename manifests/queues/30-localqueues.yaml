@@ -1,0 +1,17 @@
+# A LocalQueue is the namespaced "front door" teams submit to.
+# It points at the team's ClusterQueue.
+apiVersion: kueue.x-k8s.io/v1beta2
+kind: LocalQueue
+metadata:
+  name: team-queue
+  namespace: research
+spec:
+  clusterQueue: research
+---
+apiVersion: kueue.x-k8s.io/v1beta2
+kind: LocalQueue
+metadata:
+  name: team-queue
+  namespace: production
+spec:
+  clusterQueue: production

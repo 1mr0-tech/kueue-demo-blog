@@ -1,0 +1,27 @@
+# Production needs a 4-worker distributed fine-tune. Only 2 GPUs are free...
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: llm-finetune
+  namespace: production
+  labels:
+    app: ai-demo
+spec:
+  parallelism: 4
+  completions: 4
+  completionMode: Indexed
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 1
+      containers:
+      - name: worker
+        image: busybox:1.37
+        command: ["sh", "-c", "echo \"fine-tune rank (worker $JOB_COMPLETION_INDEX)\"; sleep 3600"]
+        resources:
+          requests:
+            cpu: 250m
+            memory: 256Mi
+          limits:
+            nvidia.com/gpu: 1   # 1 GPU per worker

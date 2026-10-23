@@ -1,0 +1,9 @@
+# A ResourceFlavor describes one "kind" of hardware.
+# Workloads admitted on this flavor get scheduled onto nodes with these labels.
+apiVersion: kueue.x-k8s.io/v1beta2
+kind: ResourceFlavor
+metadata:
+  name: a100
+spec:
+  nodeLabels:
+    accelerator: nvidia-a100

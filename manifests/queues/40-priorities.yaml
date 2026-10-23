@@ -1,0 +1,15 @@
+# Kueue-only priorities: they decide queue order and preemption,
+# without touching pod scheduling priority.
+apiVersion: kueue.x-k8s.io/v1beta2
+kind: WorkloadPriorityClass
+metadata:
+  name: urgent
+value: 1000
+description: "Customer-facing incidents, release blockers"
+---
+apiVersion: kueue.x-k8s.io/v1beta2
+kind: WorkloadPriorityClass
+metadata:
+  name: batch
+value: 100
+description: "Evals, sweeps, anything that can wait"

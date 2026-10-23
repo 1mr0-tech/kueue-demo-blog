@@ -1,0 +1,29 @@
+# Production fine-tune, through its LocalQueue, at 'batch' priority.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: llm-finetune
+  namespace: production
+  labels:
+    app: ai-demo
+    kueue.x-k8s.io/queue-name: team-queue  # <- the only change teams make
+    kueue.x-k8s.io/priority-class: batch
+spec:
+  parallelism: 4
+  completions: 4
+  completionMode: Indexed
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 1
+      containers:
+      - name: worker
+        image: busybox:1.37
+        command: ["sh", "-c", "echo \"fine-tune rank (worker $JOB_COMPLETION_INDEX)\"; sleep 3600"]
+        resources:
+          requests:
+            cpu: 250m
+            memory: 256Mi
+          limits:
+            nvidia.com/gpu: 1   # 1 GPU per worker

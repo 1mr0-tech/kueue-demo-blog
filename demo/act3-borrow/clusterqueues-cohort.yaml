@@ -1,0 +1,51 @@
+# Same ClusterQueues, now in one cohort ("ai-platform").
+# Unused quota can be borrowed by the other team, and taken back
+# (reclaimWithinCohort) when its owner needs it again.
+apiVersion: kueue.x-k8s.io/v1beta2
+kind: ClusterQueue
+metadata:
+  name: research
+spec:
+  cohortName: ai-platform
+  namespaceSelector: {}
+  queueingStrategy: BestEffortFIFO
+  preemption:
+    reclaimWithinCohort: Any
+    withinClusterQueue: LowerPriority
+  resourceGroups:
+  - coveredResources: ["cpu", "memory", "nvidia.com/gpu"]
+    flavors:
+    - name: a100
+      resources:
+      - name: cpu
+        nominalQuota: 4
+      - name: memory
+        nominalQuota: 4Gi
+      - name: nvidia.com/gpu
+        nominalQuota: 4
+---
+apiVersion: kueue.x-k8s.io/v1beta2
+kind: ClusterQueue
+metadata:
+  name: production
+spec:
+  cohortName: ai-platform
+  namespaceSelector: {}
+  queueingStrategy: BestEffortFIFO
+  preemption:
+    reclaimWithinCohort: Any
+    withinClusterQueue: LowerPriority
+  resourceGroups:
+  - coveredResources: ["cpu", "memory", "nvidia.com/gpu"]
+    flavors:
+    - name: a100
+      resources:
+      - name: cpu
+        nominalQuota: 4
+      - name: memory
+        nominalQuota: 4Gi
+      - name: nvidia.com/gpu
+        nominalQuota: 4
+        # production never lends more than 2 GPUs: a safety floor
+        # (uncomment live to show lendingLimit)
+        # lendingLimit: 2

@@ -1,0 +1,10 @@
+# Two teams share one GPU cluster.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: research
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: production
