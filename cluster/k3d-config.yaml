@@ -1,0 +1,23 @@
+# A small "AI cluster": 1 control-plane + 2 GPU worker nodes.
+# The GPUs are fake: setup.sh advertises nvidia.com/gpu on each agent node.
+apiVersion: k3d.io/v1alpha5
+kind: Simple
+metadata:
+  name: ai-cluster
+servers: 1
+agents: 2
+image: rancher/k3s:v1.36.4-k3s1
+options:
+  k3d:
+    wait: true
+    disableLoadbalancer: true
+  k3s:
+    extraArgs:
+      - arg: --disable=traefik
+        nodeFilters: [server:*]
+      # keep user workloads off the control plane, like a real GPU cluster
+      - arg: --node-taint=node-role.kubernetes.io/control-plane:NoSchedule
+        nodeFilters: [server:*]
+    nodeLabels:
+      - label: accelerator=nvidia-a100
+        nodeFilters: [agent:*]

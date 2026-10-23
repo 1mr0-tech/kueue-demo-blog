@@ -1,0 +1,11 @@
+# IDE / local
+.claude/
+.vscode/
+.idea/
+
+# macOS
+.DS_Store
+
+# talk prep + blog drafts (owner-only)
+docs/
+blog/

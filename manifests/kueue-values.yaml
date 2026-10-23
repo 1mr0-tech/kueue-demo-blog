@@ -1,0 +1,59 @@
+# Helm values for the Kueue chart (v0.20.x).
+enableKueueViz: true
+
+managerConfig:
+  controllerManagerConfigYaml: |-
+    apiVersion: config.kueue.x-k8s.io/v1beta2
+    kind: Configuration
+    health:
+      healthProbeBindAddress: :8081
+    metrics:
+      bindAddress: :8443
+    webhook:
+      port: 9443
+    leaderElection:
+      leaderElect: true
+      resourceName: c1f6bfd2.kueue.x-k8s.io
+    controller:
+      groupKindConcurrency:
+        Job.batch: 5
+        Pod: 5
+        Workload.kueue.x-k8s.io: 10
+        LocalQueue.kueue.x-k8s.io: 5
+        Cohort.kueue.x-k8s.io: 1
+        ClusterQueue.kueue.x-k8s.io: 5
+        ResourceFlavor.kueue.x-k8s.io: 1
+    clientConnection:
+      qps: 300
+      burst: 500
+    # All-or-nothing: if an admitted job's pods are not all running within
+    # the timeout, Kueue evicts it, gives the quota back and requeues it.
+    # Short timeouts so the effect is visible on stage (Act 6).
+    waitForPodsReady:
+      timeout: 45s
+      blockAdmission: false
+      requeuingStrategy:
+        timestamp: Eviction
+        backoffBaseSeconds: 30
+        backoffMaxSeconds: 120
+    # Only jobs that carry a kueue.x-k8s.io/queue-name label are managed.
+    # That is what lets Act 1 show the "no Kueue" chaos on the same cluster.
+    integrations:
+      frameworks:
+      - "batch/job"
+
+kueueViz:
+  backend:
+    # dashboard is reached through kubectl port-forward on stage (scripts/kueueviz.sh)
+    env:
+      - name: KUEUEVIZ_ALLOWED_ORIGINS
+        value: "http://localhost:8080"
+    ingress:
+      enabled: false
+    image:
+      pullPolicy: IfNotPresent   # chart default is Always: breaks on conference wifi
+  frontend:
+    ingress:
+      enabled: false
+    image:
+      pullPolicy: IfNotPresent
